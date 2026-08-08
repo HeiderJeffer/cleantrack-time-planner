@@ -133,8 +133,6 @@ rooms_remaining = (
 if current_minutes < start_minutes:
 
     available_minutes = (
-if corridor_finished:
-    available_minutes = max(0, available_minutes - 20)
         end_minutes
         - start_minutes
         - BREAK_MINUTES
@@ -160,6 +158,18 @@ else:
     available_minutes = (
         end_minutes
         - current_minutes
+    )
+
+
+# =========================================================
+# CORRIDOR TIME
+# =========================================================
+
+if corridor_finished:
+
+    available_minutes = max(
+        0,
+        available_minutes - 20
     )
 
 
