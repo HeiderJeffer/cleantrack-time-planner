@@ -221,7 +221,7 @@ BREAK_MINUTES = 20
 # =========================================================
 
 st.markdown(
-    '<div class="app-title">🧹 CleanTrack Time Planner</div>',
+    '<div class="app-title">CleanTrack Time Planner</div>',
     unsafe_allow_html=True
 )
 
