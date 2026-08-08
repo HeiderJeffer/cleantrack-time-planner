@@ -350,8 +350,7 @@ with top2:
         f"🛏️ **{rooms_remaining} rooms remaining**"
     )
 
-    st.write(
-       hours = available_minutes // 60
+hours = available_minutes // 60
 minutes = available_minutes % 60
 
 if hours > 0 and minutes > 0:
@@ -363,7 +362,7 @@ else:
 
 st.write(
     f"⏱️ **{available_time_display} available**"
-)
+    )
 
 
 # =========================================================
