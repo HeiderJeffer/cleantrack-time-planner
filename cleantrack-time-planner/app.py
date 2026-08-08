@@ -1,3 +1,4 @@
+```python
 # =========================================================
 # CleanTrack Time Planner
 # Built with Python by Heider Jeffer
@@ -44,13 +45,31 @@ st.markdown(
 )
 
 st.caption(
-    "Smart Cleaning Time Planner — "
-    "organize your work and stay on time."
+    "Simple cleaning time management for the working day."
 )
 
 
 # =========================================================
-# DATE
+# WORKING DAY
+# =========================================================
+
+st.divider()
+
+st.subheader("📅 Working Day")
+
+st.markdown(
+    """
+🕗 **Start:** 08:00 AM &nbsp;&nbsp;&nbsp;
+☕ **Break:** 10:00 AM – 10:20 AM
+
+🏁 **Finish:** 01:00 PM &nbsp;&nbsp;&nbsp;
+🛏️ **Rooms:** 16
+"""
+)
+
+
+# =========================================================
+# CURRENT DATE
 # =========================================================
 
 now = datetime.now()
@@ -59,28 +78,9 @@ today = now.strftime("%d/%m/%Y")
 day_name = now.strftime("%A")
 
 
-st.divider()
-
-st.subheader("📅 Working Day")
-
-
-date_col1, date_col2 = st.columns(2)
-
-
-with date_col1:
-
-    st.metric(
-        "Day",
-        day_name
-    )
-
-
-with date_col2:
-
-    st.metric(
-        "Date",
-        today
-    )
+st.caption(
+    f"📆 {day_name}, {today}"
+)
 
 
 # =========================================================
@@ -231,6 +231,7 @@ def format_minutes(minutes):
     if hours > 0:
 
         if mins > 0:
+
             return f"{hours}h {mins}m"
 
         return f"{hours}h"
@@ -285,7 +286,7 @@ with metric4:
 
 
 # =========================================================
-# PROGRESS
+# CLEANING PROGRESS
 # =========================================================
 
 st.divider()
@@ -323,11 +324,13 @@ if rooms_completed == TOTAL_ROOMS:
         "🏆 All 16 rooms are completed!"
     )
 
+
 elif current_minutes < start_minutes:
 
     st.info(
         "🕗 Work has not started yet."
     )
+
 
 elif (
     current_minutes >= break_start_minutes
@@ -339,70 +342,38 @@ elif (
         "10:00 AM → 10:20 AM"
     )
 
-elif current_minutes > end_minutes:
+
+elif current_minutes >= end_minutes:
 
     st.error(
         "⛔ Working time has finished."
     )
 
+
 elif minutes_per_room >= 17.5:
 
     st.success(
-        f"🟢 You are on schedule. "
-        f"You have approximately "
+        f"🟢 You're on schedule — "
+        f"you have approximately "
         f"**{minutes_per_room:.1f} minutes per room**."
     )
+
 
 elif minutes_per_room >= 15:
 
     st.warning(
-        f"🟡 Keep a steady pace. "
-        f"You have approximately "
+        f"🟡 Keep a steady pace — "
+        f"you have approximately "
         f"**{minutes_per_room:.1f} minutes per room**."
     )
+
 
 else:
 
     st.error(
-        f"🔴 Time is tight. "
-        f"You have only "
+        f"🔴 Time is tight — "
+        f"you have only "
         f"**{minutes_per_room:.1f} minutes per room**."
-    )
-
-
-# =========================================================
-# BREAK
-# =========================================================
-
-st.divider()
-
-st.subheader("☕ Break")
-
-
-break_col1, break_col2, break_col3 = st.columns(3)
-
-
-with break_col1:
-
-    st.metric(
-        "Break Starts",
-        "10:00 AM"
-    )
-
-
-with break_col2:
-
-    st.metric(
-        "Break Ends",
-        "10:20 AM"
-    )
-
-
-with break_col3:
-
-    st.metric(
-        "Duration",
-        "20 minutes"
     )
 
 
@@ -426,6 +397,7 @@ if rooms_remaining == 0:
         f"at approximately **{expected_finish}**."
     )
 
+
 else:
 
     finish_minutes = (
@@ -436,8 +408,9 @@ else:
         )
     )
 
-    # Add break if the estimated schedule
-    # crosses the 10:00 AM break.
+
+    # Add the break if the estimated
+    # schedule crosses 10:00 AM.
 
     if (
         current_minutes < break_start_minutes
@@ -457,6 +430,7 @@ else:
             finish_minutes % 60
         )
 
+
         expected_finish = datetime(
             2026,
             1,
@@ -467,11 +441,13 @@ else:
             "%I:%M %p"
         )
 
+
         st.info(
             f"🎯 At your current pace, "
             f"you should finish around "
             f"**{expected_finish}**."
         )
+
 
     else:
 
@@ -479,6 +455,7 @@ else:
             finish_minutes
             - end_minutes
         )
+
 
         st.error(
             f"⚠️ At the current pace, "
@@ -489,130 +466,27 @@ else:
 
 
 # =========================================================
-# ROOM-BY-ROOM PLAN
+# ROOM-BY-ROOM TIME PLAN
 # =========================================================
 
 st.divider()
 
-st.subheader("🗓️ Room-by-Room Time Plan")
-
-st.caption(
-    "The planner automatically divides the remaining "
-    "available time between the rooms."
+st.subheader(
+    "🗓️ Room-by-Room Time Plan"
 )
 
 
 if rooms_remaining > 0:
 
-    schedule_minutes = current_minutes
-
-
-    for room in range(
-        rooms_completed + 1,
-        TOTAL_ROOMS + 1
-    ):
-
-        # -------------------------------------------------
-        # Handle break
-        # -------------------------------------------------
-
-        if (
-            schedule_minutes < break_start_minutes
-            and
-            schedule_minutes + minutes_per_room
-            > break_start_minutes
-        ):
-
-            schedule_minutes = (
-                break_end_minutes
-            )
-
-        elif (
-            schedule_minutes >= break_start_minutes
-            and
-            schedule_minutes < break_end_minutes
-        ):
-
-            schedule_minutes = (
-                break_end_minutes
-            )
-
-
-        room_start = schedule_minutes
-
-        room_end = (
-            room_start
-            + minutes_per_room
-        )
-
-
-        # -------------------------------------------------
-        # Convert start time
-        # -------------------------------------------------
-
-        start_hour = int(
-            room_start // 60
-        )
-
-        start_minute = int(
-            room_start % 60
-        )
-
-
-        # -------------------------------------------------
-        # Convert end time
-        # -------------------------------------------------
-
-        end_hour = int(
-            room_end // 60
-        )
-
-        end_minute = int(
-            room_end % 60
-        )
-
-
-        start_display = datetime(
-            2026,
-            1,
-            1,
-            start_hour % 24,
-            start_minute
-        ).strftime(
-            "%I:%M %p"
-        )
-
-
-        end_display = datetime(
-            2026,
-            1,
-            1,
-            end_hour % 24,
-            end_minute
-        ).strftime(
-            "%I:%M %p"
-        )
-
-
-        # -------------------------------------------------
-        # Display room
-        # -------------------------------------------------
-
-        st.write(
-            f"🛏️ **Room {room}**  "
-            f"**{start_display} → {end_display}**  "
-            f"({minutes_per_room:.1f} min)"
-        )
-
-
-        schedule_minutes = room_end
-
+    st.metric(
+        "⏱️ Time per Room",
+        f"{minutes_per_room:.1f} min / Room"
+    )
 
 else:
 
     st.success(
-        "🏆 No rooms remaining. "
-        "You have completed today's cleaning."
+        "🏆 All rooms completed."
     )
 
 
@@ -639,41 +513,7 @@ else:
 
 
 # =========================================================
-# WORKER NOTES
-# =========================================================
-
-st.divider()
-
-st.subheader("📝 Worker Notes")
-
-st.caption(
-    "Use these notes to organize your work or "
-    "remember anything important."
-)
-
-
-room_notes = {}
-
-
-for room in range(
-    1,
-    TOTAL_ROOMS + 1
-):
-
-    room_notes[str(room)] = st.text_area(
-        f"🛏️ Room {room}",
-        placeholder=(
-            "Example: towels missing, "
-            "maintenance needed, "
-            "extra cleaning required..."
-        ),
-        key=f"room_note_{room}",
-        height=70
-    )
-
-
-# =========================================================
-# MOTIVATION
+# SIMPLE MOTIVATION
 # =========================================================
 
 st.divider()
@@ -686,17 +526,20 @@ if rooms_completed == 0:
         "Stay focused and keep a steady pace!"
     )
 
+
 elif rooms_completed < 4:
 
     st.info(
         "💪 Good start! Keep going."
     )
 
+
 elif rooms_completed < 8:
 
     st.success(
         "🔥 You're making good progress!"
     )
+
 
 elif rooms_completed < 12:
 
@@ -705,11 +548,13 @@ elif rooms_completed < 12:
         "Keep the same pace!"
     )
 
+
 elif rooms_completed < 16:
 
     st.success(
         "🏃 Almost there! Finish strong!"
     )
+
 
 else:
 
@@ -732,3 +577,4 @@ st.markdown(
 st.markdown(
     "***Built with Python by Heider Jeffer***"
 )
+```
