@@ -584,9 +584,7 @@ with result3:
 
 if rooms_remaining > 0:
 
-    st.markdown(
-        "### 🗓️ Room-by-Room Time Plan"
-    )
+    
 
     st.metric(
         "Minutes per room",
