@@ -565,20 +565,3 @@ st.markdown(
 """
 )
 
-
-
-
-
-# =========================================================
-# FOOTER
-# =========================================================
-
-st.divider()
-
-st.markdown(
-    "### 🧹 CleanTrack Time Planner"
-)
-
-st.markdown(
-    "***Built with Python by Heider Jeffer***"
-)
