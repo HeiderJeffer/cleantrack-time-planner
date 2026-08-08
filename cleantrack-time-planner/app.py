@@ -1,4 +1,3 @@
-
 # =========================================================
 # CleanTrack Time Planner
 # Built with Python by Heider Jeffer
@@ -40,18 +39,13 @@ BREAK_MINUTES = 20
 
 st.title("🧹 CleanTrack Time Planner")
 
-st.markdown(
-    "**Built with Python by Heider Jeffer**"
-)
-
 st.caption(
-    "Simple cleaning time management for the working day."
+    "Built with Python by Heider Jeffer"
 )
-
 
 
 # =========================================================
-# CURRENT DATE
+# DATE
 # =========================================================
 
 now = datetime.now()
@@ -60,24 +54,16 @@ today = now.strftime("%d/%m/%Y")
 day_name = now.strftime("%A")
 
 
-st.caption(
-    f"📆 {day_name}, {today}"
-)
-
-
 # =========================================================
-# WORK INFORMATION
+# WORK INPUTS
 # =========================================================
 
-st.divider()
+st.subheader("⚙️ Work")
 
-st.subheader("⚙️ Work Information")
-
-
-col1, col2, col3 = st.columns(3)
+work_col1, work_col2, work_col3 = st.columns(3)
 
 
-with col1:
+with work_col1:
 
     current_time = st.time_input(
         "⏰ Current Time",
@@ -86,7 +72,7 @@ with col1:
     )
 
 
-with col2:
+with work_col2:
 
     rooms_completed = st.number_input(
         "🛏️ Rooms Completed",
@@ -97,7 +83,7 @@ with col2:
     )
 
 
-with col3:
+with work_col3:
 
     corridor_finished = st.checkbox(
         "🚿 Corridor Finished"
@@ -105,7 +91,7 @@ with col3:
 
 
 # =========================================================
-# TIME CONVERSION
+# TIME CALCULATIONS
 # =========================================================
 
 current_minutes = (
@@ -135,7 +121,7 @@ break_end_minutes = (
 
 
 # =========================================================
-# REMAINING ROOMS
+# ROOMS
 # =========================================================
 
 rooms_remaining = (
@@ -148,7 +134,15 @@ rooms_remaining = (
 # AVAILABLE TIME
 # =========================================================
 
-if current_minutes < break_start_minutes:
+if current_minutes < start_minutes:
+
+    available_minutes = (
+        end_minutes
+        - start_minutes
+        - BREAK_MINUTES
+    )
+
+elif current_minutes < break_start_minutes:
 
     available_minutes = (
         end_minutes
@@ -156,10 +150,7 @@ if current_minutes < break_start_minutes:
         - BREAK_MINUTES
     )
 
-elif (
-    current_minutes >= break_start_minutes
-    and current_minutes < break_end_minutes
-):
+elif current_minutes < break_end_minutes:
 
     available_minutes = (
         end_minutes
@@ -197,84 +188,8 @@ else:
 
 
 # =========================================================
-# FORMAT MINUTES
+# PROGRESS
 # =========================================================
-
-def format_minutes(minutes):
-
-    minutes = max(
-        0,
-        int(round(minutes))
-    )
-
-    hours = minutes // 60
-    mins = minutes % 60
-
-    if hours > 0:
-
-        if mins > 0:
-
-            return f"{hours}h {mins}m"
-
-        return f"{hours}h"
-
-    return f"{mins}m"
-
-
-# =========================================================
-# CURRENT SITUATION
-# =========================================================
-
-st.divider()
-
-st.subheader("📊 Current Situation")
-
-
-metric1, metric2, metric3, metric4 = st.columns(4)
-
-
-with metric1:
-
-    st.metric(
-        "🛏️ Rooms Completed",
-        f"{rooms_completed}/{TOTAL_ROOMS}"
-    )
-
-
-with metric2:
-
-    st.metric(
-        "📋 Rooms Remaining",
-        rooms_remaining
-    )
-
-
-with metric3:
-
-    st.metric(
-        "⏱️ Time Available",
-        format_minutes(
-            available_minutes
-        )
-    )
-
-
-with metric4:
-
-    st.metric(
-        "⏳ Minutes / Room",
-        f"{minutes_per_room:.1f}"
-    )
-
-
-# =========================================================
-# CLEANING PROGRESS
-# =========================================================
-
-st.divider()
-
-st.subheader("📈 Cleaning Progress")
-
 
 progress = (
     rooms_completed
@@ -282,25 +197,9 @@ progress = (
 )
 
 
-st.progress(progress)
-
-
-st.write(
-    f"**{rooms_completed} of "
-    f"{TOTAL_ROOMS} rooms completed**"
-)
-
-
-
-
 # =========================================================
 # EXPECTED FINISH
 # =========================================================
-
-st.divider()
-
-st.subheader("🎯 Expected Finish")
-
 
 if rooms_remaining == 0:
 
@@ -308,16 +207,18 @@ if rooms_remaining == 0:
         "%I:%M %p"
     )
 
-    st.success(
-        f"🏆 All rooms are finished "
-        f"at approximately **{expected_finish}**."
-    )
-
-
 else:
 
+    # If work has not started yet,
+    # calculate from 08:00.
+
+    calculation_start = max(
+        current_minutes,
+        start_minutes
+    )
+
     finish_minutes = (
-        current_minutes
+        calculation_start
         + (
             rooms_remaining
             * minutes_per_room
@@ -325,11 +226,11 @@ else:
     )
 
 
-    # Add the break if the estimated
-    # schedule crosses 10:00 AM.
+    # Add break if the estimated
+    # schedule crosses the break.
 
     if (
-        current_minutes < break_start_minutes
+        calculation_start < break_start_minutes
         and finish_minutes > break_start_minutes
     ):
 
@@ -346,7 +247,6 @@ else:
             finish_minutes % 60
         )
 
-
         expected_finish = datetime(
             2026,
             1,
@@ -357,145 +257,273 @@ else:
             "%I:%M %p"
         )
 
+    else:
 
-        st.info(
-            f"🎯 At your current pace, "
-            f"you should finish around "
-            f"**{expected_finish}**."
+        expected_finish = "After 1:00 PM"
+
+
+# =========================================================
+# STATUS
+# =========================================================
+
+if rooms_completed == TOTAL_ROOMS:
+
+    status_text = "🏆 All rooms completed"
+    status_type = "success"
+
+elif (
+    current_minutes >= break_start_minutes
+    and current_minutes < break_end_minutes
+):
+
+    status_text = "☕ Break time"
+    status_type = "warning"
+
+elif current_minutes >= end_minutes:
+
+    status_text = "⛔ Working time finished"
+    status_type = "error"
+
+elif minutes_per_room >= 17.5:
+
+    status_text = "🟢 On schedule"
+    status_type = "success"
+
+elif minutes_per_room >= 15:
+
+    status_text = "🟡 Keep a steady pace"
+    status_type = "warning"
+
+else:
+
+    status_text = "🔴 Time is tight"
+    status_type = "error"
+
+
+# =========================================================
+# TOP DASHBOARD ROW
+# =========================================================
+
+st.divider()
+
+top1, top2, top3, top4 = st.columns(4)
+
+
+# =========================================================
+# WORK
+# =========================================================
+
+with top1:
+
+    st.subheader("⚙️ Work")
+
+    st.write(
+        f"⏰ **{current_time.strftime('%I:%M %p')}**"
+    )
+
+    st.write(
+        f"🛏️ **{rooms_completed} / {TOTAL_ROOMS} rooms**"
+    )
+
+    if corridor_finished:
+
+        st.write(
+            "🚿 **Corridor ✓**"
         )
-
 
     else:
 
-        overtime = (
-            finish_minutes
-            - end_minutes
-        )
-
-
-        st.error(
-            f"⚠️ At the current pace, "
-            f"you may finish approximately "
-            f"**{format_minutes(overtime)} "
-            f"after 1:00 PM**."
+        st.write(
+            "🚿 **Corridor —**"
         )
 
 
 # =========================================================
-# ROOM-BY-ROOM TIME PLAN
+# TODAY
 # =========================================================
 
-st.divider()
+with top2:
 
-st.subheader(
-    "🗓️ Room-by-Room Time Plan"
-)
+    st.subheader("📊 Today")
 
-
-if rooms_remaining > 0:
-
-    st.metric(
-        "⏱️ Time per Room",
-        f"{minutes_per_room:.1f} min / Room"
+    st.write(
+        f"🛏️ **{rooms_remaining} rooms remaining**"
     )
 
-else:
-
-    st.success(
-        "🏆 All rooms completed."
+    st.write(
+        f"⏱️ **{available_minutes} min available**"
     )
 
 
 # =========================================================
-# CORRIDOR
+# ROOM TIME
 # =========================================================
 
-st.divider()
+with top3:
 
-st.subheader("🚿 Corridor")
+    st.subheader("🗓️ Room Time")
 
+    if rooms_remaining > 0:
 
-if corridor_finished:
+        st.metric(
+            "Time / Room",
+            f"{minutes_per_room:.1f} min"
+        )
 
-    st.success(
-        "✅ Corridor completed."
-    )
+    else:
 
-else:
-
-    st.warning(
-        "⏳ Corridor still needs to be completed."
-    )
-
-
-# =========================================================
-# SIMPLE MOTIVATION
-# =========================================================
-
-st.divider()
-
-
-if rooms_completed == 0:
-
-    st.info(
-        "💪 Start with Room 1. "
-        "Stay focused and keep a steady pace!"
-    )
-
-
-elif rooms_completed < 4:
-
-    st.info(
-        "💪 Good start! Keep going."
-    )
-
-
-elif rooms_completed < 8:
-
-    st.success(
-        "🔥 You're making good progress!"
-    )
-
-
-elif rooms_completed < 12:
-
-    st.success(
-        "🚀 More than half completed. "
-        "Keep the same pace!"
-    )
-
-
-elif rooms_completed < 16:
-
-    st.success(
-        "🏃 Almost there! Finish strong!"
-    )
-
-
-else:
-
-    st.success(
-        "🏆 Fantastic work! "
-        "All 16 rooms are completed!"
-    )
-
+        st.success(
+            "All rooms done"
+        )
 
 
 # =========================================================
 # WORKING DAY
 # =========================================================
 
+with top4:
+
+    st.subheader("📅 Working Day")
+
+    st.write(
+        "🕗 **08:00 AM → 01:00 PM**"
+    )
+
+    st.write(
+        "☕ **10:00 AM → 10:20 AM**"
+    )
+
+    st.write(
+        "🛏️ **16 rooms**"
+    )
+
+    st.caption(
+        f"{day_name}, {today}"
+    )
+
+
+# =========================================================
+# SECOND DASHBOARD ROW
+# =========================================================
+
 st.divider()
 
-st.subheader("📅 Working Day")
+bottom1, bottom2, bottom3 = st.columns(3)
 
-st.markdown(
-    """
-🕗 **Start:** 08:00 AM &nbsp;&nbsp;&nbsp;
-☕ **Break:** 10:00 AM – 10:20 AM
 
-🏁 **Finish:** 01:00 PM &nbsp;&nbsp;&nbsp;
-🛏️ **Rooms:** 16
-"""
-)
+# =========================================================
+# PROGRESS
+# =========================================================
+
+with bottom1:
+
+    st.subheader("📈 Progress")
+
+    st.metric(
+        "Completed",
+        f"{rooms_completed} / {TOTAL_ROOMS}"
+    )
+
+    st.progress(
+        progress
+    )
+
+
+# =========================================================
+# STATUS
+# =========================================================
+
+with bottom2:
+
+    st.subheader("🚦 Status")
+
+    if status_type == "success":
+
+        st.success(
+            status_text
+        )
+
+    elif status_type == "warning":
+
+        st.warning(
+            status_text
+        )
+
+    else:
+
+        st.error(
+            status_text
+        )
+
+
+# =========================================================
+# EXPECTED FINISH
+# =========================================================
+
+with bottom3:
+
+    st.subheader("🎯 Expected Finish")
+
+    if rooms_remaining == 0:
+
+        st.success(
+            expected_finish
+        )
+
+    elif expected_finish == "After 1:00 PM":
+
+        st.error(
+            expected_finish
+        )
+
+    else:
+
+        st.metric(
+            "Finish",
+            expected_finish
+        )
+
+
+# =========================================================
+# SIMPLE WORK MESSAGE
+# =========================================================
+
+st.divider()
+
+if rooms_completed == TOTAL_ROOMS:
+
+    st.success(
+        "🏆 Great work! All 16 rooms are completed."
+    )
+
+elif (
+    current_minutes >= break_start_minutes
+    and current_minutes < break_end_minutes
+):
+
+    st.info(
+        "☕ Take your 20-minute break. "
+        "Work continues at 10:20 AM."
+    )
+
+elif minutes_per_room >= 17.5:
+
+    st.success(
+        f"🟢 Keep your current pace — "
+        f"about {minutes_per_room:.1f} minutes per room."
+    )
+
+elif minutes_per_room >= 15:
+
+    st.warning(
+        f"🟡 Stay focused — "
+        f"about {minutes_per_room:.1f} minutes per room."
+    )
+
+else:
+
+    st.error(
+        f"🔴 You need to increase your pace — "
+        f"only {minutes_per_room:.1f} minutes per room."
+    )
 
