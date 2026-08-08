@@ -39,9 +39,7 @@ BREAK_MINUTES = 20
 
 st.title("🧹 CleanTrack Time Planner")
 
-st.caption(
-    "Built with Python by Heider Jeffer"
-)
+st.caption("Built with Python by Heider Jeffer")
 
 
 # =========================================================
@@ -57,8 +55,6 @@ day_name = now.strftime("%A")
 # =========================================================
 # WORK INPUTS
 # =========================================================
-
-st.subheader("⚙️ Work")
 
 work_col1, work_col2, work_col3 = st.columns(3)
 
@@ -172,6 +168,34 @@ available_minutes = max(
 
 
 # =========================================================
+# AVAILABLE TIME DISPLAY
+# =========================================================
+
+available_hours = available_minutes // 60
+available_remainder = available_minutes % 60
+
+
+if available_hours > 0 and available_remainder > 0:
+
+    available_time_display = (
+        f"{available_hours}h "
+        f"{available_remainder}m"
+    )
+
+elif available_hours > 0:
+
+    available_time_display = (
+        f"{available_hours}h"
+    )
+
+else:
+
+    available_time_display = (
+        f"{available_remainder}m"
+    )
+
+
+# =========================================================
 # MINUTES PER ROOM
 # =========================================================
 
@@ -209,9 +233,6 @@ if rooms_remaining == 0:
 
 else:
 
-    # If work has not started yet,
-    # calculate from 08:00.
-
     calculation_start = max(
         current_minutes,
         start_minutes
@@ -224,10 +245,6 @@ else:
             * minutes_per_room
         )
     )
-
-
-    # Add break if the estimated
-    # schedule crosses the break.
 
     if (
         calculation_start < break_start_minutes
@@ -301,7 +318,7 @@ else:
 
 
 # =========================================================
-# TOP DASHBOARD ROW
+# MAIN DASHBOARD — TOP ROW
 # =========================================================
 
 st.divider()
@@ -310,31 +327,33 @@ top1, top2, top3, top4 = st.columns(4)
 
 
 # =========================================================
-# WORK
+# WORK INFORMATION
 # =========================================================
 
 with top1:
 
-    st.subheader("⚙️ Work")
-
     st.write(
-        f"⏰ **{current_time.strftime('%I:%M %p')}**"
+        f"⏰ **Current Time**  \n"
+        f"### {current_time.strftime('%I:%M %p')}"
     )
 
     st.write(
-        f"🛏️ **{rooms_completed} / {TOTAL_ROOMS} rooms**"
+        f"🛏️ **Rooms Completed**  \n"
+        f"### {rooms_completed} / {TOTAL_ROOMS}"
     )
 
     if corridor_finished:
 
         st.write(
-            "🚿 **Corridor ✓**"
+            "🚿 **Corridor Finished**  \n"
+            "### ✓"
         )
 
     else:
 
         st.write(
-            "🚿 **Corridor —**"
+            "🚿 **Corridor Finished**  \n"
+            "### —"
         )
 
 
@@ -344,24 +363,12 @@ with top1:
 
 with top2:
 
-    st.subheader("📊 Today")
-
     st.write(
         f"🛏️ **{rooms_remaining} rooms remaining**"
     )
 
-hours = available_minutes // 60
-minutes = available_minutes % 60
-
-if hours > 0 and minutes > 0:
-    available_time_display = f"{hours}h {minutes}m"
-elif hours > 0:
-    available_time_display = f"{hours}h"
-else:
-    available_time_display = f"{minutes}m"
-
-st.write(
-    f"⏱️ **{available_time_display} available**"
+    st.write(
+        f"⏱️ **{available_time_display} available**"
     )
 
 
@@ -371,19 +378,17 @@ st.write(
 
 with top3:
 
-    st.subheader("🗓️ Room Time")
-
     if rooms_remaining > 0:
 
         st.metric(
-            "Time / Room",
+            "⏱️ Time / Room",
             f"{minutes_per_room:.1f} min"
         )
 
     else:
 
         st.success(
-            "All rooms done"
+            "🏆 All rooms done"
         )
 
 
@@ -392,8 +397,6 @@ with top3:
 # =========================================================
 
 with top4:
-
-    st.subheader("📅 Working Day")
 
     st.write(
         "🕗 **08:00 AM → 01:00 PM**"
@@ -413,7 +416,7 @@ with top4:
 
 
 # =========================================================
-# SECOND DASHBOARD ROW
+# SECOND ROW
 # =========================================================
 
 st.divider()
@@ -427,11 +430,9 @@ bottom1, bottom2, bottom3 = st.columns(3)
 
 with bottom1:
 
-    st.subheader("📈 Progress")
-
     st.metric(
-        "Completed",
-        f"{rooms_completed} / {TOTAL_ROOMS}"
+        "📈 Progress",
+        f"{int(progress * 100)}%"
     )
 
     st.progress(
@@ -444,8 +445,6 @@ with bottom1:
 # =========================================================
 
 with bottom2:
-
-    st.subheader("🚦 Status")
 
     if status_type == "success":
 
@@ -472,30 +471,28 @@ with bottom2:
 
 with bottom3:
 
-    st.subheader("🎯 Expected Finish")
-
     if rooms_remaining == 0:
 
         st.success(
-            expected_finish
+            f"🎯 **{expected_finish}**"
         )
 
     elif expected_finish == "After 1:00 PM":
 
         st.error(
-            expected_finish
+            f"🎯 **{expected_finish}**"
         )
 
     else:
 
         st.metric(
-            "Finish",
+            "🎯 Expected Finish",
             expected_finish
         )
 
 
 # =========================================================
-# SIMPLE WORK MESSAGE
+# SIMPLE MESSAGE
 # =========================================================
 
 st.divider()
@@ -533,7 +530,18 @@ elif minutes_per_room >= 15:
 else:
 
     st.error(
-        f"🔴 You need to increase your pace — "
+        f"🔴 Time is tight — "
         f"only {minutes_per_room:.1f} minutes per room."
     )
 
+
+# =========================================================
+# FOOTER
+# =========================================================
+
+st.divider()
+
+st.caption(
+    "🧹 CleanTrack Time Planner • "
+    "Built with Python by Heider Jeffer"
+)
