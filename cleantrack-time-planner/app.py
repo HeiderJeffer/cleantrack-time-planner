@@ -49,24 +49,6 @@ st.caption(
 )
 
 
-# =========================================================
-# WORKING DAY
-# =========================================================
-
-st.divider()
-
-st.subheader("📅 Working Day")
-
-st.markdown(
-    """
-🕗 **Start:** 08:00 AM &nbsp;&nbsp;&nbsp;
-☕ **Break:** 10:00 AM – 10:20 AM
-
-🏁 **Finish:** 01:00 PM &nbsp;&nbsp;&nbsp;
-🛏️ **Rooms:** 16
-"""
-)
-
 
 # =========================================================
 # CURRENT DATE
@@ -562,6 +544,29 @@ else:
         "🏆 Fantastic work! "
         "All 16 rooms are completed!"
     )
+
+
+
+# =========================================================
+# WORKING DAY
+# =========================================================
+
+st.divider()
+
+st.subheader("📅 Working Day")
+
+st.markdown(
+    """
+🕗 **Start:** 08:00 AM &nbsp;&nbsp;&nbsp;
+☕ **Break:** 10:00 AM – 10:20 AM
+
+🏁 **Finish:** 01:00 PM &nbsp;&nbsp;&nbsp;
+🛏️ **Rooms:** 16
+"""
+)
+
+
+
 
 
 # =========================================================
