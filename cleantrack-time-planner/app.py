@@ -1,4 +1,4 @@
-```python
+
 # =========================================================
 # CleanTrack Time Planner
 # Built with Python by Heider Jeffer
@@ -577,4 +577,3 @@ st.markdown(
 st.markdown(
     "***Built with Python by Heider Jeffer***"
 )
-```
