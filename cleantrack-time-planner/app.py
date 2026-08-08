@@ -351,8 +351,19 @@ with top2:
     )
 
     st.write(
-        f"⏱️ **{available_minutes} min available**"
-    )
+       hours = available_minutes // 60
+minutes = available_minutes % 60
+
+if hours > 0 and minutes > 0:
+    available_time_display = f"{hours}h {minutes}m"
+elif hours > 0:
+    available_time_display = f"{hours}h"
+else:
+    available_time_display = f"{minutes}m"
+
+st.write(
+    f"⏱️ **{available_time_display} available**"
+)
 
 
 # =========================================================
