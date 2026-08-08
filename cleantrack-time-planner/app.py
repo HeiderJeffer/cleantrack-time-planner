@@ -1,4 +1,3 @@
-
 # =========================================================
 # CleanTrack Time Planner
 # Built with Python by Heider Jeffer
