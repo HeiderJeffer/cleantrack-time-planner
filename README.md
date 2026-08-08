@@ -4,7 +4,7 @@
 
 ### ⏱️ Smart Cleaning Time Management
 
-[🌐 Launch CleanTrack Time Planner](https://cleantrack-pro-tt6jexd3rj3nkpc8ctenmm.streamlit.app/?utm_source=chatgpt.com)
+[🌐 Launch CleanTrack Time Planner](https://3c7hth9srl6meaocdpn8tw.streamlit.app/)
 
 **CleanTrack Time Planner** is a simple and practical Streamlit application designed to help cleaning workers **organize their working time, manage their daily cleaning schedule, and stay on track throughout the day**.
 
