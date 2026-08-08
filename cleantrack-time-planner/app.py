@@ -673,40 +673,6 @@ for room in range(
 
 
 # =========================================================
-# DAILY WORK PLAN
-# =========================================================
-
-st.divider()
-
-st.subheader("📋 Daily Work Plan")
-
-
-plan_col1, plan_col2 = st.columns(2)
-
-
-with plan_col1:
-
-    st.write(
-        "🕗 **Start:** 08:00 AM"
-    )
-
-    st.write(
-        "☕ **Break:** 10:00 AM – 10:20 AM"
-    )
-
-
-with plan_col2:
-
-    st.write(
-        "🏁 **Finish:** 01:00 PM"
-    )
-
-    st.write(
-        "🛏️ **Rooms:** 16"
-    )
-
-
-# =========================================================
 # MOTIVATION
 # =========================================================
 
