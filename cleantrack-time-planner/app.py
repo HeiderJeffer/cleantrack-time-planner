@@ -585,22 +585,12 @@ with result3:
 if rooms_remaining > 0:
 
     st.markdown(
-        f"""
-        <div class="room-time">
-            <div class="room-time-label">
-                Room-by-Room Time Plan
-            </div>
+        "### 🗓️ Room-by-Room Time Plan"
+    )
 
-            <div class="room-time-value">
-                {minutes_per_room:.1f}
-            </div>
-
-            <div class="room-time-unit">
-                minutes per room
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
+    st.metric(
+        "Minutes per room",
+        f"{minutes_per_room:.1f} min"
     )
 
 else:
@@ -608,7 +598,6 @@ else:
     st.success(
         "🏆 All 16 rooms are completed!"
     )
-
 
 # =========================================================
 # PROGRESS + STATUS
