@@ -14,76 +14,7 @@ from datetime import datetime, time
 st.set_page_config(
     page_title="CleanTrack Time Planner",
     page_icon="🧹",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
-
-
-# =========================================================
-# COMPACT STYLE
-# =========================================================
-
-st.markdown(
-    """
-    <style>
-
-    .block-container {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        padding-left: 2rem;
-        padding-right: 2rem;
-        max-width: 1400px;
-    }
-
-    h1 {
-        font-size: 2rem !important;
-        margin-bottom: 0.1rem !important;
-    }
-
-    h2, h3 {
-        margin-top: 0.2rem !important;
-        margin-bottom: 0.3rem !important;
-    }
-
-    p {
-        margin-bottom: 0.25rem !important;
-    }
-
-    [data-testid="stMetric"] {
-        padding: 0.2rem 0;
-    }
-
-    [data-testid="stMetricValue"] {
-        font-size: 1.5rem;
-    }
-
-    [data-testid="stVerticalBlock"] {
-        gap: 0.4rem;
-    }
-
-    div[data-testid="stHorizontalBlock"] {
-        gap: 0.8rem;
-    }
-
-    .stProgress {
-        margin-top: 0.2rem;
-        margin-bottom: 0.2rem;
-    }
-
-    .compact-card {
-        padding: 0.5rem 0.7rem;
-        border-radius: 10px;
-        background-color: rgba(128, 128, 128, 0.08);
-        min-height: 125px;
-    }
-
-    .small-text {
-        font-size: 0.85rem;
-    }
-
-    </style>
-    """,
-    unsafe_allow_html=True
+    layout="wide"
 )
 
 
@@ -122,7 +53,7 @@ day_name = now.strftime("%A")
 
 
 # =========================================================
-# INPUTS
+# WORK INPUTS
 # =========================================================
 
 work_col1, work_col2, work_col3 = st.columns(3)
@@ -227,6 +158,18 @@ else:
     available_minutes = (
         end_minutes
         - current_minutes
+    )
+
+
+# =========================================================
+# CORRIDOR TIME
+# =========================================================
+
+if corridor_finished:
+
+    available_minutes = max(
+        0,
+        available_minutes - 20
     )
 
 
@@ -390,48 +333,40 @@ else:
 # MAIN DASHBOARD — TOP ROW
 # =========================================================
 
-st.markdown("<div style='margin-top:0.4rem'></div>", unsafe_allow_html=True)
+st.divider()
 
 top1, top2, top3, top4 = st.columns(4)
 
 
 # =========================================================
-# WORK
+# WORK INFORMATION
 # =========================================================
 
 with top1:
 
-    st.markdown(
-        '<div class="compact-card">',
-        unsafe_allow_html=True
-    )
-
     st.write(
         f"⏰ **Current Time**  \n"
-        f"**{current_time.strftime('%I:%M %p')}**"
+        f"### {current_time.strftime('%I:%M %p')}"
     )
 
     st.write(
         f"🛏️ **Rooms Completed**  \n"
-        f"**{rooms_completed} / {TOTAL_ROOMS}**"
+        f"### {rooms_completed} / {TOTAL_ROOMS}"
     )
 
     if corridor_finished:
 
         st.write(
-            "🚿 **Corridor Finished** ✓"
+            "🚿 **Corridor Finished**  \n"
+            "### ✓"
         )
 
     else:
 
         st.write(
-            "🚿 **Corridor Finished**"
+            "🚿 **Corridor Finished**  \n"
+            "### —"
         )
-
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
 
 
 # =========================================================
@@ -439,11 +374,6 @@ with top1:
 # =========================================================
 
 with top2:
-
-    st.markdown(
-        '<div class="compact-card">',
-        unsafe_allow_html=True
-    )
 
     st.write(
         f"🛏️ **{rooms_remaining} rooms remaining**"
@@ -453,11 +383,6 @@ with top2:
         f"⏱️ **{available_time_display} available**"
     )
 
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
-
 
 # =========================================================
 # ROOM TIME
@@ -465,17 +390,10 @@ with top2:
 
 with top3:
 
-    st.markdown(
-        '<div class="compact-card">',
-        unsafe_allow_html=True
-    )
-
     if rooms_remaining > 0:
 
-        st.write("🗓️ **Room Time**")
-
         st.metric(
-            "Time / Room",
+            "⏱️ Time / Room",
             f"{minutes_per_room:.1f} min"
         )
 
@@ -485,22 +403,12 @@ with top3:
             "🏆 All rooms done"
         )
 
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
-
 
 # =========================================================
 # WORKING DAY
 # =========================================================
 
 with top4:
-
-    st.markdown(
-        '<div class="compact-card">',
-        unsafe_allow_html=True
-    )
 
     st.write(
         "🕗 **08:00 AM → 01:00 PM**"
@@ -518,17 +426,12 @@ with top4:
         f"{day_name}, {today}"
     )
 
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
-
 
 # =========================================================
 # SECOND ROW
 # =========================================================
 
-st.markdown("<div style='margin-top:0.7rem'></div>", unsafe_allow_html=True)
+st.divider()
 
 bottom1, bottom2, bottom3 = st.columns(3)
 
@@ -539,11 +442,6 @@ bottom1, bottom2, bottom3 = st.columns(3)
 
 with bottom1:
 
-    st.markdown(
-        '<div class="compact-card">',
-        unsafe_allow_html=True
-    )
-
     st.metric(
         "📈 Progress",
         f"{int(progress * 100)}%"
@@ -553,22 +451,12 @@ with bottom1:
         progress
     )
 
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
-
 
 # =========================================================
 # STATUS
 # =========================================================
 
 with bottom2:
-
-    st.markdown(
-        '<div class="compact-card">',
-        unsafe_allow_html=True
-    )
 
     if status_type == "success":
 
@@ -588,22 +476,12 @@ with bottom2:
             status_text
         )
 
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
-
 
 # =========================================================
 # EXPECTED FINISH
 # =========================================================
 
 with bottom3:
-
-    st.markdown(
-        '<div class="compact-card">',
-        unsafe_allow_html=True
-    )
 
     if rooms_remaining == 0:
 
@@ -624,17 +502,12 @@ with bottom3:
             expected_finish
         )
 
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
-
 
 # =========================================================
 # SIMPLE MESSAGE
 # =========================================================
 
-st.markdown("<div style='margin-top:0.5rem'></div>", unsafe_allow_html=True)
+st.divider()
 
 if rooms_completed == TOTAL_ROOMS:
 
@@ -677,6 +550,8 @@ else:
 # =========================================================
 # FOOTER
 # =========================================================
+
+st.divider()
 
 st.caption(
     "🧹 CleanTrack Time Planner • "
