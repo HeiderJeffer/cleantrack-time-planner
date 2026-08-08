@@ -1,3 +1,4 @@
+
 # =========================================================
 # CleanTrack Time Planner
 # Built with Python by Heider Jeffer
@@ -20,65 +21,179 @@ st.set_page_config(
 
 
 # =========================================================
-# COMPACT STYLE
+# PRO GUI STYLE
 # =========================================================
 
 st.markdown(
     """
     <style>
 
+    /* Main page */
+    .stApp {
+        background: #f7f8fa;
+    }
+
     .block-container {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        padding-left: 2rem;
-        padding-right: 2rem;
-        max-width: 1400px;
+        max-width: 1150px;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
     }
 
-    h1 {
-        font-size: 2rem !important;
-        margin-bottom: 0.1rem !important;
+    /* Hide unnecessary Streamlit elements */
+    #MainMenu {
+        visibility: hidden;
     }
 
-    h2, h3 {
-        margin-top: 0.2rem !important;
-        margin-bottom: 0.3rem !important;
+    footer {
+        visibility: hidden;
     }
 
-    p {
-        margin-bottom: 0.25rem !important;
+    /* Main title */
+    .app-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        margin-bottom: 0;
     }
 
-    [data-testid="stMetric"] {
-        padding: 0.2rem 0;
+    .app-subtitle {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-top: 0.15rem;
+        margin-bottom: 1.5rem;
     }
 
-    [data-testid="stMetricValue"] {
-        font-size: 1.5rem;
+    /* Input area */
+    .input-panel {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 1.2rem 1.4rem 0.8rem 1.4rem;
+        margin-bottom: 1.2rem;
     }
 
-    [data-testid="stVerticalBlock"] {
-        gap: 0.4rem;
+    /* Main result cards */
+    .result-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 1.25rem;
+        min-height: 145px;
     }
 
-    div[data-testid="stHorizontalBlock"] {
-        gap: 0.8rem;
+    .result-label {
+        color: #6b7280;
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-bottom: 0.4rem;
     }
 
-    .stProgress {
-        margin-top: 0.2rem;
-        margin-bottom: 0.2rem;
+    .result-value {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1.1;
     }
 
-    .compact-card {
-        padding: 0.5rem 0.7rem;
-        border-radius: 10px;
-        background-color: rgba(128, 128, 128, 0.08);
-        min-height: 125px;
-    }
-
-    .small-text {
+    .result-small {
+        color: #6b7280;
         font-size: 0.85rem;
+        margin-top: 0.3rem;
+    }
+
+    /* Center room time */
+    .room-time {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .room-time-label {
+        color: #6b7280;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+    }
+
+    .room-time-value {
+        font-size: 3rem;
+        font-weight: 750;
+        line-height: 1.1;
+        margin-top: 0.3rem;
+    }
+
+    .room-time-unit {
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+    /* Status */
+    .status-box {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 1rem 1.3rem;
+        margin-top: 1rem;
+        text-align: center;
+    }
+
+    .status-title {
+        color: #6b7280;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+    }
+
+    .status-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-top: 0.3rem;
+    }
+
+    /* Working day */
+    .working-day {
+        text-align: center;
+        color: #6b7280;
+        font-size: 0.82rem;
+        padding: 1rem 0 0.3rem 0;
+    }
+
+    /* Progress */
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        color: #6b7280;
+        font-size: 0.8rem;
+        margin-bottom: 0.3rem;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+
+        .block-container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: 1rem;
+        }
+
+        .app-title {
+            font-size: 1.7rem;
+        }
+
+        .result-value {
+            font-size: 1.6rem;
+        }
+
+        .room-time-value {
+            font-size: 2.4rem;
+        }
+
     }
 
     </style>
@@ -106,9 +221,17 @@ BREAK_MINUTES = 20
 # HEADER
 # =========================================================
 
-st.title("🧹 CleanTrack Time Planner")
+st.markdown(
+    '<div class="app-title">🧹 CleanTrack Time Planner</div>',
+    unsafe_allow_html=True
+)
 
-st.caption("Built with Python by Heider Jeffer")
+st.markdown(
+    '<div class="app-subtitle">'
+    'Built with Python by Heider Jeffer'
+    '</div>',
+    unsafe_allow_html=True
+)
 
 
 # =========================================================
@@ -122,13 +245,18 @@ day_name = now.strftime("%A")
 
 
 # =========================================================
-# INPUTS
+# INPUT PANEL
 # =========================================================
 
-work_col1, work_col2, work_col3 = st.columns(3)
+st.markdown(
+    '<div class="input-panel">',
+    unsafe_allow_html=True
+)
+
+input1, input2, input3 = st.columns(3)
 
 
-with work_col1:
+with input1:
 
     current_time = st.time_input(
         "⏰ Current Time",
@@ -137,7 +265,7 @@ with work_col1:
     )
 
 
-with work_col2:
+with input2:
 
     rooms_completed = st.number_input(
         "🛏️ Rooms Completed",
@@ -148,11 +276,17 @@ with work_col2:
     )
 
 
-with work_col3:
+with input3:
 
     corridor_finished = st.checkbox(
         "🚿 Corridor Finished"
     )
+
+
+st.markdown(
+    '</div>',
+    unsafe_allow_html=True
+)
 
 
 # =========================================================
@@ -355,7 +489,7 @@ else:
 if rooms_completed == TOTAL_ROOMS:
 
     status_text = "🏆 All rooms completed"
-    status_type = "success"
+    status_class = "success"
 
 elif (
     current_minutes >= break_start_minutes
@@ -363,98 +497,84 @@ elif (
 ):
 
     status_text = "☕ Break time"
-    status_type = "warning"
+    status_class = "warning"
 
 elif current_minutes >= end_minutes:
 
     status_text = "⛔ Working time finished"
-    status_type = "error"
+    status_class = "error"
 
 elif minutes_per_room >= 17.5:
 
     status_text = "🟢 On schedule"
-    status_type = "success"
+    status_class = "success"
 
 elif minutes_per_room >= 15:
 
     status_text = "🟡 Keep a steady pace"
-    status_type = "warning"
+    status_class = "warning"
 
 else:
 
     status_text = "🔴 Time is tight"
-    status_type = "error"
+    status_class = "error"
 
 
 # =========================================================
-# MAIN DASHBOARD — TOP ROW
+# TOP RESULTS
 # =========================================================
 
-st.markdown("<div style='margin-top:0.4rem'></div>", unsafe_allow_html=True)
-
-top1, top2, top3, top4 = st.columns(4)
+result1, result2, result3 = st.columns(3)
 
 
-# =========================================================
-# WORK
-# =========================================================
-
-with top1:
+with result1:
 
     st.markdown(
-        '<div class="compact-card">',
-        unsafe_allow_html=True
-    )
-
-    st.write(
-        f"⏰ **Current Time**  \n"
-        f"**{current_time.strftime('%I:%M %p')}**"
-    )
-
-    st.write(
-        f"🛏️ **Rooms Completed**  \n"
-        f"**{rooms_completed} / {TOTAL_ROOMS}**"
-    )
-
-    if corridor_finished:
-
-        st.write(
-            "🚿 **Corridor Finished** ✓"
-        )
-
-    else:
-
-        st.write(
-            "🚿 **Corridor Finished**"
-        )
-
-    st.markdown(
-        "</div>",
+        f"""
+        <div class="result-card">
+            <div class="result-label">Rooms Remaining</div>
+            <div class="result-value">{rooms_remaining}</div>
+            <div class="result-small">
+                of {TOTAL_ROOMS} total rooms
+            </div>
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
 
-# =========================================================
-# TODAY
-# =========================================================
-
-with top2:
+with result2:
 
     st.markdown(
-        '<div class="compact-card">',
+        f"""
+        <div class="result-card">
+            <div class="result-label">Time Available</div>
+            <div class="result-value">
+                {available_time_display}
+            </div>
+            <div class="result-small">
+                working time remaining
+            </div>
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
-    st.write(
-        f"🛏️ **{rooms_remaining} rooms remaining**"
-    )
 
-    st.write(
-        f"⏱️ **{available_time_display} available**"
-    )
+with result3:
 
     st.markdown(
-        "</div>",
+        f"""
+        <div class="result-card">
+            <div class="result-label">Expected Finish</div>
+            <div class="result-value">
+                {expected_finish}
+            </div>
+            <div class="result-small">
+                estimated completion
+            </div>
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
@@ -463,186 +583,78 @@ with top2:
 # ROOM TIME
 # =========================================================
 
-with top3:
+if rooms_remaining > 0:
 
     st.markdown(
-        '<div class="compact-card">',
+        f"""
+        <div class="room-time">
+            <div class="room-time-label">
+                Room-by-Room Time Plan
+            </div>
+
+            <div class="room-time-value">
+                {minutes_per_room:.1f}
+            </div>
+
+            <div class="room-time-unit">
+                minutes per room
+            </div>
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
-    if rooms_remaining > 0:
-
-        st.write("🗓️ **Room Time**")
-
-        st.metric(
-            "Time / Room",
-            f"{minutes_per_room:.1f} min"
-        )
-
-    else:
-
-        st.success(
-            "🏆 All rooms done"
-        )
-
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
-
-
-# =========================================================
-# WORKING DAY
-# =========================================================
-
-with top4:
-
-    st.markdown(
-        '<div class="compact-card">',
-        unsafe_allow_html=True
-    )
-
-    st.write(
-        "🕗 **08:00 AM → 01:00 PM**"
-    )
-
-    st.write(
-        "☕ **10:00 AM → 10:20 AM**"
-    )
-
-    st.write(
-        "🛏️ **16 rooms**"
-    )
-
-    st.caption(
-        f"{day_name}, {today}"
-    )
-
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
-
-
-# =========================================================
-# SECOND ROW
-# =========================================================
-
-st.markdown("<div style='margin-top:0.7rem'></div>", unsafe_allow_html=True)
-
-bottom1, bottom2, bottom3 = st.columns(3)
-
-
-# =========================================================
-# PROGRESS
-# =========================================================
-
-with bottom1:
-
-    st.markdown(
-        '<div class="compact-card">',
-        unsafe_allow_html=True
-    )
-
-    st.metric(
-        "📈 Progress",
-        f"{int(progress * 100)}%"
-    )
-
-    st.progress(
-        progress
-    )
-
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
-
-
-# =========================================================
-# STATUS
-# =========================================================
-
-with bottom2:
-
-    st.markdown(
-        '<div class="compact-card">',
-        unsafe_allow_html=True
-    )
-
-    if status_type == "success":
-
-        st.success(
-            status_text
-        )
-
-    elif status_type == "warning":
-
-        st.warning(
-            status_text
-        )
-
-    else:
-
-        st.error(
-            status_text
-        )
-
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
-
-
-# =========================================================
-# EXPECTED FINISH
-# =========================================================
-
-with bottom3:
-
-    st.markdown(
-        '<div class="compact-card">',
-        unsafe_allow_html=True
-    )
-
-    if rooms_remaining == 0:
-
-        st.success(
-            f"🎯 **{expected_finish}**"
-        )
-
-    elif expected_finish == "After 1:00 PM":
-
-        st.error(
-            f"🎯 **{expected_finish}**"
-        )
-
-    else:
-
-        st.metric(
-            "🎯 Expected Finish",
-            expected_finish
-        )
-
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
-
-
-# =========================================================
-# SIMPLE MESSAGE
-# =========================================================
-
-st.markdown("<div style='margin-top:0.5rem'></div>", unsafe_allow_html=True)
-
-if rooms_completed == TOTAL_ROOMS:
+else:
 
     st.success(
-        "🏆 Great work! All 16 rooms are completed."
+        "🏆 All 16 rooms are completed!"
     )
 
-elif (
+
+# =========================================================
+# PROGRESS + STATUS
+# =========================================================
+
+progress_col, status_col = st.columns(2)
+
+
+with progress_col:
+
+    st.markdown(
+        f"""
+        <div class="status-box">
+            <div class="status-title">Progress</div>
+            <div class="status-value">
+                {int(progress * 100)}%
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.progress(progress)
+
+
+with status_col:
+
+    if status_class == "success":
+
+        st.success(status_text)
+
+    elif status_class == "warning":
+
+        st.warning(status_text)
+
+    else:
+
+        st.error(status_text)
+
+
+# =========================================================
+# BREAK MESSAGE
+# =========================================================
+
+if (
     current_minutes >= break_start_minutes
     and current_minutes < break_end_minutes
 ):
@@ -652,33 +664,22 @@ elif (
         "Work continues at 10:20 AM."
     )
 
-elif minutes_per_room >= 17.5:
-
-    st.success(
-        f"🟢 Keep your current pace — "
-        f"about {minutes_per_room:.1f} minutes per room."
-    )
-
-elif minutes_per_room >= 15:
-
-    st.warning(
-        f"🟡 Stay focused — "
-        f"about {minutes_per_room:.1f} minutes per room."
-    )
-
-else:
-
-    st.error(
-        f"🔴 Time is tight — "
-        f"only {minutes_per_room:.1f} minutes per room."
-    )
-
 
 # =========================================================
-# FOOTER
+# WORKING DAY
 # =========================================================
 
-st.caption(
-    "🧹 CleanTrack Time Planner • "
-    "Built with Python by Heider Jeffer"
+st.markdown(
+    f"""
+    <div class="working-day">
+        🕗 08:00 AM — 01:00 PM
+        &nbsp;&nbsp;•&nbsp;&nbsp;
+        ☕ 10:00 AM — 10:20 AM
+        &nbsp;&nbsp;•&nbsp;&nbsp;
+        🛏️ 16 Rooms
+        &nbsp;&nbsp;•&nbsp;&nbsp;
+        {day_name}, {today}
+    </div>
+    """,
+    unsafe_allow_html=True
 )
